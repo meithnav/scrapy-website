@@ -6,8 +6,8 @@ from ..items import SeamsfriendlyItem
 
 class ShortsSpider(scrapy.Spider):
     name = 'shorts'
-    start_urls = ['https://in.seamsfriendly.com/collections/shorts?page=1/']
-    page_num=1
+    start_urls = ['https://in.seamsfriendly.com/collections/shorts?page=1']
+    page_num=2
     max_page=4
 
     def parse_prod(self, response):
@@ -30,13 +30,21 @@ class ShortsSpider(scrapy.Spider):
     
     def parse(self, response):
         
-        all_shorts_links = response.css(
-            ".ProductItem .ProductItem__Wrapper").css("a::attr(href)")
+        # all_shorts_links = response.css(".ProductItem .ProductItem__Wrapper").css("a::attr(href)")
 
-        for link in all_shorts_links:
+        for link in response.css(".ProductItem .ProductItem__Wrapper").css("a::attr(href)"):
             yield response.follow(link.get(),  callback=self.parse_prod)
+       
+        
+        next_page = "https://in.seamsfriendly.com/collections/shorts?page=" +str(ShortsSpider.page_num)+""
 
-            
+        if ShortsSpider.page_num < ShortsSpider.max_page:
+            print("\n\n\n\nNEXT PAGE :****************************", next_page, "*****************")
+
+            ShortsSpider.page_num += 1
+            yield response.follow(next_page, callback=self.parse)
+
+        
 
     
     # def parse(self, response):
