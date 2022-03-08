@@ -14,7 +14,7 @@ class ShortsSpider(scrapy.Spider):
         item = SeamsfriendlyItem()
 
         title = response.css(".u-h2::text").get().replace('\n' , '').strip()
-        ImgLinks = response.css(".Product__Slideshow .Product__SlideItem--image div img").css("::attr(data-src)").extract()
+        ImgLinks = response.css(".Product__Slideshow .Product__SlideItem--image div img").css("::attr(data-original-src)").extract()
         price = response.css("#shopify-section-product-template .Price").css("::text").get().replace('₹', '').replace(',', '')
         description = '\n'.join(response.css(".Rte ul li::text").extract()[9:])
 
@@ -30,8 +30,6 @@ class ShortsSpider(scrapy.Spider):
     
     def parse(self, response):
         
-        # all_shorts_links = response.css(".ProductItem .ProductItem__Wrapper").css("a::attr(href)")
-
         for link in response.css(".ProductItem .ProductItem__Wrapper").css("a::attr(href)"):
             yield response.follow(link.get(),  callback=self.parse_prod)
        
@@ -43,18 +41,9 @@ class ShortsSpider(scrapy.Spider):
             ShortsSpider.page_num += 1
             yield response.follow(next_page, callback=self.parse)
 
-        
-
-    
-    # def parse(self, response):
+   
 
 
-    #     next_page = 'https://in.seamsfriendly.com/collections/shorts?page =' +str(ShortsSpider.page_num)+'/'
-
-    #     if ShortsSpider.page_num < ShortsSpider.max_page:
-    #         ShortsSpider.page_num += 1
-
-    #         yield response.follow(next_page,  callback=self.link_parse)
 
 
 # color
