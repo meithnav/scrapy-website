@@ -14,7 +14,7 @@ class ShortsSpider(scrapy.Spider):
         item = SeamsfriendlyItem()
 
         title = response.css(".u-h2::text").get().replace('\n' , '').strip()
-        ImgLinks = response.css(".Product__Slideshow .Product__SlideItem--image div img").css("::attr(data-original-src)").extract()
+        ImgLinks = ["https:"+i for i in response.css(".Product__Slideshow .Product__SlideItem--image div img").css("::attr(data-original-src)").extract()]
         price = response.css("#shopify-section-product-template .Price").css("::text").get().replace('₹', '').replace(',', '')
         description = '\n'.join(response.css(".Rte ul li::text").extract()[9:])
 
