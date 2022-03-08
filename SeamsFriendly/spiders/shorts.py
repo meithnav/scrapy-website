@@ -39,8 +39,7 @@ class ShortsSpider(scrapy.Spider):
         next_page = "https://in.seamsfriendly.com/collections/shorts?page=" +str(ShortsSpider.page_num)+""
 
         if ShortsSpider.page_num < ShortsSpider.max_page:
-            print("\n\n\n\nNEXT PAGE :****************************", next_page, "*****************")
-
+            # print("\n\n\n\nNEXT PAGE :****************************", next_page, "*****************")
             ShortsSpider.page_num += 1
             yield response.follow(next_page, callback=self.parse)
 
